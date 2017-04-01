@@ -1,0 +1,32 @@
+{
+  "name": "spec-last",
+  "version": "1.0.0",
+  "description": "A proxy API that allows you to expose APIs created using Import.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "api",
+    "import.io"
+  ],
+  "author": "Bob Reselman",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "chai": "^3.5.0",
+    "eslint": "^3.17.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
+    "express": "^4.15.2",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "node-uuid": "^1.4.7",
+    "request": "^2.80.0",
+    "request-promise": "^4.1.1",
+    "supertest": "^3.0.0",
+    "unzip-response": "^2.0.1"
+  }
+}
