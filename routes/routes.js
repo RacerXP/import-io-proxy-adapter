@@ -25,7 +25,7 @@ const appRouter = function (app) {
     });
   });
 
-  app.get('/reports', function (req, res) {
+  app.get('/documentation', function (req, res) {
     const dir = process.cwd();
     const joined = path.join(dir, '/html/index.html');
     fs.readFile(joined, function (err, html) {
