@@ -4,11 +4,19 @@ const path = require('path');
 const fs = require('fs');
 const appRouter = function (app) {
   app.get('/api', function (req, res) {
+    if(req.query.aggregate){
+      importer.aggregateExtractors(req.query.refresh)
+        .then(response => {
+          res.send(response);
+        });
+    }else{
     importer.getExtractors(req.query.nextPage, req.query.refresh)
       .then(response => {
         res.send(response);
       });
+    }
   });
+
 
   app.get('/api/:id', function (req, res) {
     importer.getExtractor(req.params.id)

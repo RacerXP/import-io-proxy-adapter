@@ -43,7 +43,17 @@ function refreshExtractor(id){
     });
 }
 
-module.exports.getExtractors = function getExtractors(currentPage, refresh) {
+const getExtractor = module.exports.getExtractor = function getExtractor(id) {
+    const endpoint = `https://data.import.io/extractor/${id}/json/latest?_apikey=${ioKey}`;
+    const options = getHttpOptions('GET', endpoint);
+    return requestPromise(options)
+        .then(response => {
+            return response.body.result.extractorData.data[0].group;
+        });
+};
+
+
+const getExtractors = module.exports.getExtractors = function getExtractors(currentPage, refresh) {
   const page = currentPage || 1;
   const endpoint = `https://store.import.io/store/extractor/_search?_sort=_meta.creationTimestamp&_mine=true&q=_missing_:archived%20OR%20archived:false&_page=${page}&_apikey=${ioKey}`;
   const options = getHttpOptions('GET', endpoint)
@@ -66,11 +76,31 @@ module.exports.getExtractors = function getExtractors(currentPage, refresh) {
     });
 };
 
-module.exports.getExtractor = function getExtractor(id) {
-  const endpoint = `https://data.import.io/extractor/${id}/json/latest?_apikey=${ioKey}`;
-  const options = getHttpOptions('GET', endpoint);
-  return requestPromise(options)
-    .then(response => {
-      return response.body;
-    });
+module.exports.aggregateExtractors = function aggregateExtractors(refresh){
+    return getExtractors(null, refresh)
+        .then(result => {
+            const validObjs = _.filter(result, r => { return r.description.match(/(x-aggregate)$/g) })
+            const getters = _.map(validObjs, r=> {
+               return getExtractor(r.id)
+            })
+
+            return Promise.all(getters);
+        })
+        .then(result => {
+            return _.flatten(result);
+        })
 };
+
+
+function parseMutipleExtactors(contents) {
+    const obs = [];
+    contents.forEach(c => {
+        if (c.length > 0) {
+            const obj = JSON.parse(c)
+            obs.push(obj.result.extractorData.data[0].group);
+        }
+    })
+    return _.flatten(obs);
+}
+
+
